@@ -1,0 +1,31 @@
+name: Process Filter Rule
+type: any
+index: metricbeat-*
+num_events: 1
+timeframe:
+  minutes: 1
+#filter:
+# - term:
+#     process.name: "metricbeat"
+# - and:
+#     term:
+#       system.process.summary.properties: "sleeping"   
+filter:
+ - query:
+      query_string:
+        query: "process.name: metricbeat AND system.process.state: stopped"
+
+alert_subject: "Process {0} is down at {1} on {2}"
+alert_subject_args:
+- "process.name"
+- "@timestamp"
+- "host.name"
+alert:
+- "email"
+email:
+- "das.subhra.k@gmail.com"
+smtp_host: "smtp.gmail.com"
+smtp_port: 25
+smtp_ssl: false
+from_addr: "wincms@etv.co.in"
+smtp_auth_file: "smtp_auth.yaml"
